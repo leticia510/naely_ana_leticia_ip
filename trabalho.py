@@ -5,7 +5,7 @@ lista_de_palavras = ["rosa", "vestido", "ken", "moda", "sonho", "princesa"]
 
 st.title("Jogo da Forca da Barbie")
 
-if 'palavra' not in st.session_state:
+def iniciar_jogo():
     st.session_state.palavra = random.choice(lista_de_palavras)
     st.session_state.letras_certas = []
     for letra in st.session_state.palavra:
@@ -15,12 +15,12 @@ if 'palavra' not in st.session_state:
             st.session_state.letras_certas.append(letra)
     st.session_state.letras_erradas = []
 
-
+if 'palavra' not in st.session_state:
+    iniciar_jogo()
 
 with st.form(key='lista_form'):
     input_letra = st.text_input(label='Digite uma letra: ')
     submit_button = st.form_submit_button('Verificar letra')
-
 
 if submit_button:
     if input_letra.isalpha():
@@ -33,20 +33,16 @@ if submit_button:
                 st.session_state.letras_erradas.append(input_letra)
 
 st.write(''.join(st.session_state.letras_certas))
-
 st.write(f"Letras erradas: {', '.join(st.session_state.letras_erradas)}")
 
 if len(st.session_state.letras_erradas) == 6:
     st.write('VOCÊ PERDEU!')
     if st.button('Reiniciar'):
-        st.session_state.palavra = random.choice(lista_de_palavras)
-        st.session_state.letras_certas = []
-        st.session_state.letras_erradas = []
+        iniciar_jogo()
+        st.experimental_rerun()
 
 if ''.join(st.session_state.letras_certas) == st.session_state.palavra:
     st.write('VOCÊ GANHOU!')
-
     if st.button('Reiniciar'):
-        st.session_state.palavra = random.choice(lista_de_palavras)
-        st.session_state.letras_certas = []
-        st.session_state.letras_erradas = []
+        iniciar_jogo()
+        st.experimental_rerun()
